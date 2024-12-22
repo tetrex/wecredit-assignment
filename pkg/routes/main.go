@@ -1,12 +1,13 @@
-package pkg
+package routes
 
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/rs/zerolog"
 	echoSwagger "github.com/swaggo/echo-swagger"
+	"github.com/tetrex/wecredit-assignment/pkg/services"
 )
 
-func initRoutes(router *echo.Echo, services *Services, l *zerolog.Logger) {
+func InitRoutes(router *echo.Echo, services *services.Services, l *zerolog.Logger) {
 	// Public routes (No JWT required)
 	router.GET("/", services.Health.HealthCheck)
 	// router.POST("/login", services.Auth.Login)

@@ -1,4 +1,4 @@
-package pkg
+package server
 
 import (
 	"net/http"
@@ -9,6 +9,8 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/rs/zerolog"
 	db "github.com/tetrex/wecredit-assignment/db/sqlc"
+	"github.com/tetrex/wecredit-assignment/pkg/routes"
+	"github.com/tetrex/wecredit-assignment/pkg/services"
 	"github.com/tetrex/wecredit-assignment/utils/config"
 	"golang.org/x/time/rate"
 )
@@ -18,7 +20,7 @@ type Server struct {
 	router   *echo.Echo
 	logger   *zerolog.Logger
 	queries  *db.Queries
-	services *Services
+	services *services.Services
 }
 
 type ServerParams struct {
@@ -27,7 +29,7 @@ type ServerParams struct {
 	PgQueries *db.Queries
 }
 
-func (s *Server) GetServices() *Services {
+func (s *Server) GetServices() *services.Services {
 	return s.services
 }
 
@@ -99,14 +101,14 @@ func NewServer(c *ServerParams) (*Server, error) {
 		ExposeHeaders: []string{"Set-Cookie"},
 	}))
 	// services
-	services := initServices(ServicesParmas{
-		config:  c.Config,
-		logger:  c.Logger,
-		queries: c.PgQueries,
+	services := services.InitServices(services.ServicesParmas{
+		Config:  c.Config,
+		Logger:  c.Logger,
+		Queries: c.PgQueries,
 	})
 
 	// routes setup
-	initRoutes(router, services, c.Logger)
+	routes.InitRoutes(router, services, c.Logger)
 
 	return &Server{
 		config:   c.Config,

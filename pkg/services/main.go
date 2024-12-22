@@ -1,4 +1,4 @@
-package pkg
+package services
 
 import (
 	"github.com/rs/zerolog"
@@ -12,12 +12,12 @@ type Services struct {
 }
 
 type ServicesParmas struct {
-	config  config.Config
-	logger  *zerolog.Logger
-	queries *db.Queries
+	Config  config.Config
+	Logger  *zerolog.Logger
+	Queries *db.Queries
 }
 
-func initServices(p ServicesParmas) *Services {
+func InitServices(p ServicesParmas) *Services {
 	// init health service
 	health_service := healthService.NewHealthService()
 	return &Services{
