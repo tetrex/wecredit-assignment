@@ -12,6 +12,9 @@ definitions:
         type: string
     type: object
   auth.SignUpResponse:
+    properties:
+      msg:
+        type: string
     type: object
   health.HealthResponse:
     properties:

@@ -109,7 +109,12 @@ const docTemplate = `{
             }
         },
         "auth.SignUpResponse": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "msg": {
+                    "type": "string"
+                }
+            }
         },
         "health.HealthResponse": {
             "type": "object",

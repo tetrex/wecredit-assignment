@@ -21,6 +21,7 @@ type SignUpRequest struct {
 }
 
 type SignUpResponse struct {
+	Msg string `json:"msg"`
 }
 
 // @tags			Auth
@@ -68,5 +69,5 @@ func (s *AuthService) SignUp(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, response)
 	}
 
-	return c.JSON(http.StatusOK, response.SuccessResponse{Data: "success/user-created", Msg: "user created"})
+	return c.JSON(http.StatusOK, response.OkResp("ok", SignUpResponse{Msg: "user created"}))
 }
