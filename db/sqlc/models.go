@@ -8,6 +8,14 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+type MobileOtp struct {
+	ID        int32            `json:"id"`
+	UserID    int32            `json:"user_id"`
+	Otp       string           `json:"otp"`
+	ValidTill pgtype.Timestamp `json:"valid_till"`
+	CreatedAt pgtype.Timestamp `json:"created_at"`
+}
+
 type User struct {
 	ID            int32       `json:"id"`
 	Username      string      `json:"username"`
