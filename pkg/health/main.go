@@ -24,5 +24,8 @@ func NewHealthService() *HealthService {
 // @failure			500	{object}	utils.ErrorResponse
 // @router			/ [get]
 func (s *HealthService) HealthCheck(c echo.Context) error {
-	return c.JSON(http.StatusOK, response.OkResp("all ok, server time", struct{ Data int64 }{Data: time.Now().UnixNano()}))
+	return c.JSON(http.StatusOK, response.OkResp("all ok, server time", struct {
+		ServerTime int64  `json:"server_time"`
+		Msg        string `json:"msg"`
+	}{Msg: "server unix time (sec)", ServerTime: time.Now().Unix()}))
 }

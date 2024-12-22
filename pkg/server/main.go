@@ -51,6 +51,10 @@ func (s *Server) GetQueries() *db.Queries {
 
 func NewServer(c *ServerParams) (*Server, error) {
 	router := echo.New()
+
+	// for unique reqiest id
+	router.Use(middleware.RequestID())
+
 	// logger
 	router.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "time=${time_rfc3339_nano}, request_id=${id}, remote_ip=${remote_ip}, method=${method}, uri=${uri}, status=${status}, latency_nano=${latency}, bytes_in=${bytes_in}, bytes_out=${bytes_out}\n",

@@ -15,10 +15,8 @@ services:
 
   local_postgres:
     image: postgres
-    environment:
-      - POSTGRES_DB=db
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=pass
+    env_file:
+      - ./.env.local
     ports:
       - 5432:5432
     healthcheck:
@@ -34,7 +32,7 @@ services:
     container_name: local_server
     build:
       context: .
-      dockerfile: ./docker/server/local.dockerfile
+      dockerfile: ./server.local.dockerfile
     ports:
       - 8000:80
     env_file:

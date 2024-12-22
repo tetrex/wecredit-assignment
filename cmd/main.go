@@ -79,7 +79,7 @@ func main() {
 	defer stop()
 	// some specific tasks
 	_, b, _, _ := runtime.Caller(0)
-	root_path := filepath.Join(filepath.Dir(b), "./")
+	root_path := filepath.Join(filepath.Dir(b), "../")
 	m, err := migrate.New(
 		"file://"+filepath.Join(root_path, "db/migrations"),
 		config.PgxMigrationStr)
