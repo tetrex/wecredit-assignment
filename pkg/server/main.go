@@ -12,6 +12,7 @@ import (
 	"github.com/tetrex/wecredit-assignment/pkg/routes"
 	"github.com/tetrex/wecredit-assignment/pkg/services"
 	"github.com/tetrex/wecredit-assignment/utils/config"
+	custommiddleware "github.com/tetrex/wecredit-assignment/utils/custom_middleware"
 	"golang.org/x/time/rate"
 )
 
@@ -54,6 +55,9 @@ func NewServer(c *ServerParams) (*Server, error) {
 
 	// for unique reqiest id
 	router.Use(middleware.RequestID())
+
+	// device id
+	router.Use(custommiddleware.DeviceIDMiddleware())
 
 	// logger
 	router.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{

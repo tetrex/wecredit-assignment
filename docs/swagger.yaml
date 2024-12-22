@@ -1,11 +1,23 @@
 basePath: /
 definitions:
   auth.SignUpRequest:
+    properties:
+      age:
+        type: integer
+      password:
+        type: string
+      sex:
+        type: string
+      user_name:
+        type: string
     type: object
   auth.SignUpResponse:
     type: object
   health.HealthResponse:
     properties:
+      device_id:
+        description: Server time in Unix timestamp (seconds)
+        type: string
       msg:
         description: Message
         type: string

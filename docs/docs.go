@@ -92,7 +92,21 @@ const docTemplate = `{
     },
     "definitions": {
         "auth.SignUpRequest": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "age": {
+                    "type": "integer"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "sex": {
+                    "type": "string"
+                },
+                "user_name": {
+                    "type": "string"
+                }
+            }
         },
         "auth.SignUpResponse": {
             "type": "object"
@@ -100,6 +114,10 @@ const docTemplate = `{
         "health.HealthResponse": {
             "type": "object",
             "properties": {
+                "device_id": {
+                    "description": "Server time in Unix timestamp (seconds)",
+                    "type": "string"
+                },
                 "msg": {
                     "description": "Message",
                     "type": "string"

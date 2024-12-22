@@ -11,7 +11,7 @@ func InitRoutes(router *echo.Echo, services *services.Services, l *zerolog.Logge
 	// Public routes (No JWT required)
 	router.GET("/", services.Health.HealthCheck)
 	// router.POST("/login", services.Auth.Login)
-	// router.POST("/signup", services.Auth.SignUp)
+	router.POST("/signup", services.Auth.SignUp)
 
 	// Protected routes (JWT required)
 	// protected := router.Group("/v1", jwt.JWTMiddleware)

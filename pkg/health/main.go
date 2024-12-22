@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/labstack/echo/v4"
+	"github.com/tetrex/wecredit-assignment/utils/helpers"
 	"github.com/tetrex/wecredit-assignment/utils/response"
 )
 
@@ -17,6 +18,7 @@ func NewHealthService() *HealthService {
 
 type HealthResponse struct {
 	ServerTime int64  `json:"server_time"` // Server time in Unix timestamp (seconds)
+	DeviceId   string `json:"device_id"`   // Server time in Unix timestamp (seconds)
 	Msg        string `json:"msg"`         // Message
 }
 
@@ -29,5 +31,6 @@ type HealthResponse struct {
 // @failure			500	{object}	response.ErrorResponse
 // @router			/ [get]
 func (s *HealthService) HealthCheck(c echo.Context) error {
-	return c.JSON(http.StatusOK, response.OkResp("all ok, server time", HealthResponse{Msg: "server unix time (sec)", ServerTime: time.Now().Unix()}))
+	device_id, _ := helpers.GetDeviceID(c)
+	return c.JSON(http.StatusOK, response.OkResp("all ok, server time", HealthResponse{Msg: "server unix time (sec)", ServerTime: time.Now().Unix(), DeviceId: device_id}))
 }

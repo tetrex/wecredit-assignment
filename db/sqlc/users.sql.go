@@ -11,6 +11,31 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+const createNewUser = `-- name: CreateNewUser :exec
+INSERT INTO users (username, password, primary_device, sex, age)
+VALUES ($1, $2, $3, $4, $5)
+RETURNING id
+`
+
+type CreateNewUserParams struct {
+	Username      string      `json:"username"`
+	Password      string      `json:"password"`
+	PrimaryDevice string      `json:"primary_device"`
+	Sex           pgtype.Text `json:"sex"`
+	Age           pgtype.Int4 `json:"age"`
+}
+
+func (q *Queries) CreateNewUser(ctx context.Context, arg CreateNewUserParams) error {
+	_, err := q.db.Exec(ctx, createNewUser,
+		arg.Username,
+		arg.Password,
+		arg.PrimaryDevice,
+		arg.Sex,
+		arg.Age,
+	)
+	return err
+}
+
 const getUserById = `-- name: GetUserById :one
 SELECT id, username, primary_device, sex, age 
 FROM users 
@@ -127,4 +152,17 @@ type UpdateUserPasswordParams struct {
 func (q *Queries) UpdateUserPassword(ctx context.Context, arg UpdateUserPasswordParams) error {
 	_, err := q.db.Exec(ctx, updateUserPassword, arg.Password, arg.ID)
 	return err
+}
+
+const userNameTaken = `-- name: UserNameTaken :one
+SELECT COUNT(*) > 0 AS is_taken
+FROM users
+WHERE username = $1 AND is_deleted = FALSE
+`
+
+func (q *Queries) UserNameTaken(ctx context.Context, username string) (bool, error) {
+	row := q.db.QueryRow(ctx, userNameTaken, username)
+	var is_taken bool
+	err := row.Scan(&is_taken)
+	return is_taken, err
 }

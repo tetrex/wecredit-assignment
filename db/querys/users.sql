@@ -27,3 +27,13 @@ WHERE id = $3 AND is_deleted = FALSE;
 UPDATE users 
 SET is_deleted = TRUE 
 WHERE id = $1;
+
+-- name: UserNameTaken :one
+SELECT COUNT(*) > 0 AS is_taken
+FROM users
+WHERE username = $1 AND is_deleted = FALSE;
+
+-- name: CreateNewUser :exec
+INSERT INTO users (username, password, primary_device, sex, age)
+VALUES ($1, $2, $3, $4, $5)
+RETURNING id;
