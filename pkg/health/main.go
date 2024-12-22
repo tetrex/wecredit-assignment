@@ -15,17 +15,19 @@ func NewHealthService() *HealthService {
 	return &HealthService{}
 }
 
+type HealthResponse struct {
+	ServerTime int64  `json:"server_time"` // Server time in Unix timestamp (seconds)
+	Msg        string `json:"msg"`         // Message
+}
+
 // @tags			Health
 // @summary			Get Health check status
 // @description		returns server time
 // @accept			json
 // @produce			json
-// @success			200	{object}	int64
-// @failure			500	{object}	utils.ErrorResponse
+// @success			200	{object}	HealthResponse
+// @failure			500	{object}	response.ErrorResponse
 // @router			/ [get]
 func (s *HealthService) HealthCheck(c echo.Context) error {
-	return c.JSON(http.StatusOK, response.OkResp("all ok, server time", struct {
-		ServerTime int64  `json:"server_time"`
-		Msg        string `json:"msg"`
-	}{Msg: "server unix time (sec)", ServerTime: time.Now().Unix()}))
+	return c.JSON(http.StatusOK, response.OkResp("all ok, server time", HealthResponse{Msg: "server unix time (sec)", ServerTime: time.Now().Unix()}))
 }

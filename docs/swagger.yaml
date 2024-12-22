@@ -1,4 +1,23 @@
 basePath: /
+definitions:
+  auth.SignUpRequest:
+    type: object
+  auth.SignUpResponse:
+    type: object
+  health.HealthResponse:
+    properties:
+      msg:
+        description: Message
+        type: string
+      server_time:
+        description: Server time in Unix timestamp (seconds)
+        type: integer
+    type: object
+  response.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
 host: localhost:8000
 info:
   contact:
@@ -8,5 +27,50 @@ info:
     name: MIT License
   title: server api
   version: "1.0"
-paths: {}
+paths:
+  /:
+    get:
+      consumes:
+      - application/json
+      description: returns server time
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/health.HealthResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Get Health check status
+      tags:
+      - Health
+  /v1/signup:
+    post:
+      consumes:
+      - application/json
+      description: Creates New User Account
+      parameters:
+      - description: SignUpRequest
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/auth.SignUpRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.SignUpResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: User Signup
+      tags:
+      - Auth
 swagger: "2.0"
