@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/tetrex/wecredit-assignment/utils/config"
+	"github.com/tetrex/wecredit-assignment/utils/logger"
 )
 
 // @title			server api
@@ -21,5 +22,8 @@ func main() {
 		log.Fatalf("cannot load config ")
 		log.Fatal(err.Error())
 	}
+
+	// logger
+	l := logger.New(config.AppEnv)
 
 }
