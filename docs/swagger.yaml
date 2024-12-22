@@ -1,5 +1,23 @@
 basePath: /
 definitions:
+  auth.LoginRequest:
+    properties:
+      password:
+        type: string
+      user_name:
+        type: string
+    type: object
+  auth.LoginResponse:
+    properties:
+      access_token:
+        type: string
+      is_new_device:
+        type: boolean
+      new_device_id:
+        type: string
+      old_device_id:
+        type: string
+    type: object
   auth.SignUpRequest:
     properties:
       age:
@@ -33,6 +51,26 @@ definitions:
       error:
         type: string
     type: object
+  user.User:
+    properties:
+      age:
+        type: integer
+      id:
+        type: integer
+      primary_device:
+        type: string
+      sex:
+        type: string
+      username:
+        type: string
+    type: object
+  user.UserResponse:
+    properties:
+      msg:
+        type: string
+      user_data:
+        $ref: '#/definitions/user.User'
+    type: object
 host: localhost:8000
 info:
   contact:
@@ -62,6 +100,32 @@ paths:
       summary: Get Health check status
       tags:
       - Health
+  /v1/login:
+    post:
+      consumes:
+      - application/json
+      description: Login for User
+      parameters:
+      - description: LoginRequest
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/auth.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.LoginResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: User Login
+      tags:
+      - Auth
   /v1/signup:
     post:
       consumes:
@@ -88,4 +152,23 @@ paths:
       summary: User Signup
       tags:
       - Auth
+  /v1/user:
+    get:
+      consumes:
+      - application/json
+      description: Get User detail by id
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user.UserResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: User Deatils
+      tags:
+      - User
 swagger: "2.0"

@@ -37,3 +37,10 @@ WHERE username = $1 AND is_deleted = FALSE;
 INSERT INTO users (username, password, primary_device, sex, age)
 VALUES ($1, $2, $3, $4, $5)
 RETURNING id;
+
+-- name: GetUserWithPassword :one
+SELECT *
+FROM users
+WHERE username = $1
+  AND password = $2
+  AND is_deleted = FALSE;

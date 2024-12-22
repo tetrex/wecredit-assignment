@@ -63,6 +63,34 @@ func (q *Queries) GetUserById(ctx context.Context, id int32) (GetUserByIdRow, er
 	return i, err
 }
 
+const getUserWithPassword = `-- name: GetUserWithPassword :one
+SELECT id, username, password, primary_device, sex, age, is_deleted
+FROM users
+WHERE username = $1
+  AND password = $2
+  AND is_deleted = FALSE
+`
+
+type GetUserWithPasswordParams struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+func (q *Queries) GetUserWithPassword(ctx context.Context, arg GetUserWithPasswordParams) (User, error) {
+	row := q.db.QueryRow(ctx, getUserWithPassword, arg.Username, arg.Password)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.Username,
+		&i.Password,
+		&i.PrimaryDevice,
+		&i.Sex,
+		&i.Age,
+		&i.IsDeleted,
+	)
+	return i, err
+}
+
 const getUsers = `-- name: GetUsers :many
 SELECT id, username, primary_device, sex, age 
 FROM users 
