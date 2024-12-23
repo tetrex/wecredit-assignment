@@ -283,11 +283,15 @@ const docTemplate = `{
         "auth.LoginRequest": {
             "type": "object",
             "required": [
+                "mobile_number",
                 "otp",
                 "password",
                 "user_name"
             ],
             "properties": {
+                "mobile_number": {
+                    "type": "integer"
+                },
                 "otp": {
                     "type": "string"
                 },
@@ -319,11 +323,11 @@ const docTemplate = `{
         "auth.OtpRequest": {
             "type": "object",
             "required": [
-                "user_name"
+                "mobile_number"
             ],
             "properties": {
-                "user_name": {
-                    "type": "string"
+                "mobile_number": {
+                    "type": "integer"
                 }
             }
         },
@@ -334,7 +338,7 @@ const docTemplate = `{
             ],
             "properties": {
                 "user_name": {
-                    "type": "string"
+                    "type": "integer"
                 }
             }
         },
@@ -342,6 +346,9 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "age": {
+                    "type": "integer"
+                },
+                "mobile_number": {
                     "type": "integer"
                 },
                 "password": {

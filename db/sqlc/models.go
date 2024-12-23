@@ -20,6 +20,7 @@ type MobileOtp struct {
 type User struct {
 	ID            int32       `json:"id"`
 	Username      string      `json:"username"`
+	MobileNumber  int32       `json:"mobile_number"`
 	Password      string      `json:"password"`
 	PrimaryDevice string      `json:"primary_device"`
 	Sex           pgtype.Text `json:"sex"`

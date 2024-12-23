@@ -9,11 +9,11 @@ WHERE user_id = $1
   AND otp = $2
   AND valid_till > NOW();
 
--- name: GetValidOtpForUserName :one
-SELECT mo.otp,u.username
+-- name: GetValidOtpByMobile :one
+SELECT mo.otp,u.username,u.mobile_number
 FROM mobile_otp mo
 JOIN users u ON mo.user_id = u.id
-WHERE u.username = $1           
+WHERE u.mobile_number = $1           
   AND mo.valid_till > NOW()      
   AND mo.is_used = FALSE         
 LIMIT 1;                        
@@ -22,7 +22,7 @@ LIMIT 1;
 SELECT COUNT(mo.otp) >0 AS is_valid
 FROM mobile_otp mo
 JOIN users u ON mo.user_id = u.id
-WHERE u.username = $1           
+WHERE u.mobile_number = $1           
   AND mo.valid_till > NOW()      
   AND mo.is_used = FALSE         
 LIMIT 1; 

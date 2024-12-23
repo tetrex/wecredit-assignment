@@ -12,7 +12,7 @@ import (
 )
 
 type OtpRequest struct {
-	UserName string `json:"user_name" validate:"required"`
+	MobileNumber int `json:"mobile_number" validate:"required"`
 }
 
 // @tags			Auth
@@ -33,20 +33,20 @@ func (s *AuthService) GenerateOtp(c echo.Context) error {
 	}
 
 	// check is username exists
-	isUserNameValid, err := s.Queries.UserNameTaken(c.Request().Context(), req.UserName)
+	isValidMobileNumber, err := s.Queries.IsValidMobile(c.Request().Context(), int32(req.MobileNumber))
 	if err != nil {
-		s.Logger.Error().Err(err).Msg("worng username")
-		response := response.ErrResp(fmt.Sprintf("worng username = %s", err.Error()))
+		s.Logger.Error().Err(err).Msg("worng mobile number")
+		response := response.ErrResp(fmt.Sprintf("worng mobile number = %s", err.Error()))
 		return c.JSON(http.StatusBadRequest, response)
 	}
 
-	if !isUserNameValid {
-		s.Logger.Error().Err(err).Msg("worng username")
-		response := response.ErrResp("worng username")
+	if !isValidMobileNumber {
+		s.Logger.Error().Err(err).Msg("worng mobile number")
+		response := response.ErrResp("worng mobile number")
 		return c.JSON(http.StatusBadRequest, response)
 	}
 
-	user, err := s.Queries.GetUserByUserName(c.Request().Context(), req.UserName)
+	user, err := s.Queries.GetUserByMobile(c.Request().Context(), int32(req.MobileNumber))
 	if err != nil {
 		s.Logger.Error().Err(err).Msg("user not found")
 		response := response.ErrResp(fmt.Sprintf("user not found = %s", err.Error()))

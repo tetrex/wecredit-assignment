@@ -12,7 +12,7 @@ import (
 )
 
 type ResendOtpRequest struct {
-	UserName string `json:"user_name" validate:"required"`
+	MobileNumber int32 `json:"user_name" validate:"required"`
 }
 
 // @tags			Auth
@@ -33,7 +33,7 @@ func (s *AuthService) ResendOtp(c echo.Context) error {
 	}
 
 	// check is username exists
-	isUserNameValid, err := s.Queries.UserNameTaken(c.Request().Context(), req.UserName)
+	isUserNameValid, err := s.Queries.IsValidMobile(c.Request().Context(), req.MobileNumber)
 	if err != nil {
 		s.Logger.Error().Err(err).Msg("worng username")
 		response := response.ErrResp(fmt.Sprintf("worng username = %s", err.Error()))
@@ -46,7 +46,7 @@ func (s *AuthService) ResendOtp(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, response)
 	}
 
-	user, err := s.Queries.GetUserByUserName(c.Request().Context(), req.UserName)
+	user, err := s.Queries.GetUserByMobile(c.Request().Context(), req.MobileNumber)
 	if err != nil {
 		s.Logger.Error().Err(err).Msg("user not found")
 		response := response.ErrResp(fmt.Sprintf("user not found = %s", err.Error()))
@@ -54,7 +54,7 @@ func (s *AuthService) ResendOtp(c echo.Context) error {
 	}
 
 	// check otp
-	vaild_otp, err := s.Queries.IsValidOtp(c.Request().Context(), req.UserName)
+	vaild_otp, err := s.Queries.IsValidOtp(c.Request().Context(), req.MobileNumber)
 	if err != nil {
 		s.Logger.Error().Err(err).Msg("failed to get otp")
 		response := response.ErrResp(fmt.Sprintf("failed to get otp = %s", err.Error()))

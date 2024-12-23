@@ -14,9 +14,10 @@ import (
 )
 
 type LoginRequest struct {
-	UserName string `json:"user_name" validate:"required"`
-	Password string `json:"password" validate:"required"`
-	Otp      string `json:"otp" validate:"required"`
+	UserName     string `json:"user_name" validate:"required"`
+	Password     string `json:"password" validate:"required"`
+	MobileNumber int32  `json:"mobile_number" validate:"required"`
+	Otp          string `json:"otp" validate:"required"`
 }
 
 type LoginResponse struct {
@@ -47,12 +48,13 @@ func (s *AuthService) Login(c echo.Context) error {
 	hashed_password := password.HashPassword(req.Password)
 
 	user, err := s.Queries.GetUserWithPassword(c.Request().Context(), db.GetUserWithPasswordParams{
-		Username: req.UserName,
-		Password: hashed_password,
+		Username:     req.UserName,
+		Password:     hashed_password,
+		MobileNumber: req.MobileNumber,
 	})
 	if err != nil {
-		s.Logger.Error().Err(err).Msg("worng username or password")
-		response := response.ErrResp(fmt.Sprintf("worng username or password = %s", err.Error()))
+		s.Logger.Error().Err(err).Msg("worng username or password or mobile_number")
+		response := response.ErrResp(fmt.Sprintf("worng username or password or mobile_number = %s", err.Error()))
 		return c.JSON(http.StatusBadRequest, response)
 	}
 

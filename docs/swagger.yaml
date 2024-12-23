@@ -2,6 +2,8 @@ basePath: /
 definitions:
   auth.LoginRequest:
     properties:
+      mobile_number:
+        type: integer
       otp:
         type: string
       password:
@@ -9,6 +11,7 @@ definitions:
       user_name:
         type: string
     required:
+    - mobile_number
     - otp
     - password
     - user_name
@@ -26,21 +29,23 @@ definitions:
     type: object
   auth.OtpRequest:
     properties:
-      user_name:
-        type: string
+      mobile_number:
+        type: integer
     required:
-    - user_name
+    - mobile_number
     type: object
   auth.ResendOtpRequest:
     properties:
       user_name:
-        type: string
+        type: integer
     required:
     - user_name
     type: object
   auth.SignUpRequest:
     properties:
       age:
+        type: integer
+      mobile_number:
         type: integer
       password:
         type: string

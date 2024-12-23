@@ -44,25 +44,26 @@ func (q *Queries) CreateNewOtp(ctx context.Context, arg CreateNewOtpParams) erro
 	return err
 }
 
-const getValidOtpForUserName = `-- name: GetValidOtpForUserName :one
-SELECT mo.otp,u.username
+const getValidOtpByMobile = `-- name: GetValidOtpByMobile :one
+SELECT mo.otp,u.username,u.mobile_number
 FROM mobile_otp mo
 JOIN users u ON mo.user_id = u.id
-WHERE u.username = $1           
+WHERE u.mobile_number = $1           
   AND mo.valid_till > NOW()      
   AND mo.is_used = FALSE         
 LIMIT 1
 `
 
-type GetValidOtpForUserNameRow struct {
-	Otp      string `json:"otp"`
-	Username string `json:"username"`
+type GetValidOtpByMobileRow struct {
+	Otp          string `json:"otp"`
+	Username     string `json:"username"`
+	MobileNumber int32  `json:"mobile_number"`
 }
 
-func (q *Queries) GetValidOtpForUserName(ctx context.Context, username string) (GetValidOtpForUserNameRow, error) {
-	row := q.db.QueryRow(ctx, getValidOtpForUserName, username)
-	var i GetValidOtpForUserNameRow
-	err := row.Scan(&i.Otp, &i.Username)
+func (q *Queries) GetValidOtpByMobile(ctx context.Context, mobileNumber int32) (GetValidOtpByMobileRow, error) {
+	row := q.db.QueryRow(ctx, getValidOtpByMobile, mobileNumber)
+	var i GetValidOtpByMobileRow
+	err := row.Scan(&i.Otp, &i.Username, &i.MobileNumber)
 	return i, err
 }
 
@@ -70,14 +71,14 @@ const isValidOtp = `-- name: IsValidOtp :one
 SELECT COUNT(mo.otp) >0 AS is_valid
 FROM mobile_otp mo
 JOIN users u ON mo.user_id = u.id
-WHERE u.username = $1           
+WHERE u.mobile_number = $1           
   AND mo.valid_till > NOW()      
   AND mo.is_used = FALSE         
 LIMIT 1
 `
 
-func (q *Queries) IsValidOtp(ctx context.Context, username string) (bool, error) {
-	row := q.db.QueryRow(ctx, isValidOtp, username)
+func (q *Queries) IsValidOtp(ctx context.Context, mobileNumber int32) (bool, error) {
+	row := q.db.QueryRow(ctx, isValidOtp, mobileNumber)
 	var is_valid bool
 	err := row.Scan(&is_valid)
 	return is_valid, err

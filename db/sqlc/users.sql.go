@@ -12,9 +12,8 @@ import (
 )
 
 const createNewUser = `-- name: CreateNewUser :exec
-INSERT INTO users (username, password, primary_device, sex, age)
-VALUES ($1, $2, $3, $4, $5)
-RETURNING id
+INSERT INTO users (username, password, primary_device, sex, age,mobile_number)
+VALUES ($1, $2, $3, $4, $5,$6)
 `
 
 type CreateNewUserParams struct {
@@ -23,6 +22,7 @@ type CreateNewUserParams struct {
 	PrimaryDevice string      `json:"primary_device"`
 	Sex           pgtype.Text `json:"sex"`
 	Age           pgtype.Int4 `json:"age"`
+	MobileNumber  int32       `json:"mobile_number"`
 }
 
 func (q *Queries) CreateNewUser(ctx context.Context, arg CreateNewUserParams) error {
@@ -32,6 +32,7 @@ func (q *Queries) CreateNewUser(ctx context.Context, arg CreateNewUserParams) er
 		arg.PrimaryDevice,
 		arg.Sex,
 		arg.Age,
+		arg.MobileNumber,
 	)
 	return err
 }
@@ -63,8 +64,30 @@ func (q *Queries) GetUserById(ctx context.Context, id int32) (GetUserByIdRow, er
 	return i, err
 }
 
+const getUserByMobile = `-- name: GetUserByMobile :one
+SELECT id, username, mobile_number, password, primary_device, sex, age, is_deleted
+FROM users
+WHERE mobile_number = $1 AND is_deleted = FALSE
+`
+
+func (q *Queries) GetUserByMobile(ctx context.Context, mobileNumber int32) (User, error) {
+	row := q.db.QueryRow(ctx, getUserByMobile, mobileNumber)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.Username,
+		&i.MobileNumber,
+		&i.Password,
+		&i.PrimaryDevice,
+		&i.Sex,
+		&i.Age,
+		&i.IsDeleted,
+	)
+	return i, err
+}
+
 const getUserByUserName = `-- name: GetUserByUserName :one
-SELECT id, username, password, primary_device, sex, age, is_deleted
+SELECT id, username, mobile_number, password, primary_device, sex, age, is_deleted
 FROM users
 WHERE username = $1 AND is_deleted = FALSE
 `
@@ -75,6 +98,7 @@ func (q *Queries) GetUserByUserName(ctx context.Context, username string) (User,
 	err := row.Scan(
 		&i.ID,
 		&i.Username,
+		&i.MobileNumber,
 		&i.Password,
 		&i.PrimaryDevice,
 		&i.Sex,
@@ -85,24 +109,27 @@ func (q *Queries) GetUserByUserName(ctx context.Context, username string) (User,
 }
 
 const getUserWithPassword = `-- name: GetUserWithPassword :one
-SELECT id, username, password, primary_device, sex, age, is_deleted
+SELECT id, username, mobile_number, password, primary_device, sex, age, is_deleted
 FROM users
 WHERE username = $1
   AND password = $2
   AND is_deleted = FALSE
+  AND mobile_number = $3
 `
 
 type GetUserWithPasswordParams struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
+	Username     string `json:"username"`
+	Password     string `json:"password"`
+	MobileNumber int32  `json:"mobile_number"`
 }
 
 func (q *Queries) GetUserWithPassword(ctx context.Context, arg GetUserWithPasswordParams) (User, error) {
-	row := q.db.QueryRow(ctx, getUserWithPassword, arg.Username, arg.Password)
+	row := q.db.QueryRow(ctx, getUserWithPassword, arg.Username, arg.Password, arg.MobileNumber)
 	var i User
 	err := row.Scan(
 		&i.ID,
 		&i.Username,
+		&i.MobileNumber,
 		&i.Password,
 		&i.PrimaryDevice,
 		&i.Sex,
@@ -157,6 +184,19 @@ func (q *Queries) GetUsers(ctx context.Context, arg GetUsersParams) ([]GetUsersR
 		return nil, err
 	}
 	return items, nil
+}
+
+const isValidMobile = `-- name: IsValidMobile :one
+SELECT COUNT(*) > 0 AS is_taken
+FROM users
+WHERE mobile_number = $1 AND is_deleted = FALSE
+`
+
+func (q *Queries) IsValidMobile(ctx context.Context, mobileNumber int32) (bool, error) {
+	row := q.db.QueryRow(ctx, isValidMobile, mobileNumber)
+	var is_taken bool
+	err := row.Scan(&is_taken)
+	return is_taken, err
 }
 
 const softDelete = `-- name: SoftDelete :exec

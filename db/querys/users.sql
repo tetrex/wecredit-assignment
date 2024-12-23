@@ -33,19 +33,29 @@ SELECT COUNT(*) > 0 AS is_taken
 FROM users
 WHERE username = $1 AND is_deleted = FALSE;
 
+-- name: IsValidMobile :one
+SELECT COUNT(*) > 0 AS is_taken
+FROM users
+WHERE mobile_number = $1 AND is_deleted = FALSE;
+
 -- name: CreateNewUser :exec
-INSERT INTO users (username, password, primary_device, sex, age)
-VALUES ($1, $2, $3, $4, $5)
-RETURNING id;
+INSERT INTO users (username, password, primary_device, sex, age,mobile_number)
+VALUES ($1, $2, $3, $4, $5,$6);
 
 -- name: GetUserWithPassword :one
 SELECT *
 FROM users
 WHERE username = $1
   AND password = $2
-  AND is_deleted = FALSE;
+  AND is_deleted = FALSE
+  AND mobile_number = $3;
 
 -- name: GetUserByUserName :one
 SELECT *
 FROM users
 WHERE username = $1 AND is_deleted = FALSE;
+
+-- name: GetUserByMobile :one
+SELECT *
+FROM users
+WHERE mobile_number = $1 AND is_deleted = FALSE;

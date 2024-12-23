@@ -14,10 +14,11 @@ import (
 )
 
 type SignUpRequest struct {
-	UserName string `json:"user_name"`
-	Password string `json:"password"`
-	Sex      string `json:"sex"`
-	Age      int32  `json:"age"`
+	UserName     string `json:"user_name"`
+	Password     string `json:"password"`
+	MobileNumber int32  `json:"mobile_number"`
+	Sex          string `json:"sex"`
+	Age          int32  `json:"age"`
 }
 
 type SignUpResponse struct {
@@ -62,6 +63,7 @@ func (s *AuthService) SignUp(c echo.Context) error {
 		PrimaryDevice: device_id,
 		Sex:           pgtype.Text{String: req.Sex, Valid: true},
 		Age:           pgtype.Int4{Int32: req.Age, Valid: true},
+		MobileNumber:  req.MobileNumber,
 	})
 	if err != nil {
 		s.Logger.Error().Err(err).Msg("new user creation failed")

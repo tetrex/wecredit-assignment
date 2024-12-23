@@ -25,7 +25,7 @@ func (s *AuthService) GetOtp(c echo.Context) error {
 		response := response.ErrResp(fmt.Sprintf("Failed to bind request = %s", err.Error()))
 		return c.JSON(http.StatusBadRequest, response)
 	}
-	data, err := s.Queries.GetValidOtpForUserName(c.Request().Context(), req.UserName)
+	data, err := s.Queries.GetValidOtpByMobile(c.Request().Context(), int32(req.MobileNumber))
 	if err != nil {
 		s.Logger.Error().Err(err).Msg("failed to get otp")
 		response := response.ErrResp(fmt.Sprintf("failed to get otp = %s", err.Error()))
