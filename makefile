@@ -19,6 +19,11 @@ dev:
 	@ $(MAKE) check_required_dev_executables
 	@ docker compose -f ./docker-compose.yml up --build --remove-orphans
 
+# prod commands
+server:
+	@ $(MAKE) check_required_dev_executables
+	@ docker compose -f ./docker-compose.prod.yml up --build --remove-orphans
+
 # migrations
 m_up:
 	@ docker compose -f ./docker-compose.yml run --rm local_migrate \
