@@ -142,6 +142,32 @@ paths:
       summary: Send Otp
       tags:
       - Auth
+  /v1/get-valid-otp:
+    post:
+      consumes:
+      - application/json
+      description: Sends Otp To User
+      parameters:
+      - description: OtpRequest
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/auth.OtpRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Send Otp
+      tags:
+      - Auth
   /v1/login:
     post:
       consumes:
