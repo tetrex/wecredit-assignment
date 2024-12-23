@@ -3,12 +3,11 @@ FROM golang:alpine
 WORKDIR /app
 
 COPY go.mod go.sum ./
-
-RUN go mod download
+RUN go mod tidy
 
 COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo ./main_api ./cmd/main.go
+RUN go build -o ./main_api ./cmd/main.go
 
 EXPOSE 80
 

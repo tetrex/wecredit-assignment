@@ -20,7 +20,7 @@ services:
     container_name: prod_server
     build:
       context: .
-      dockerfile: ./server.local.dockerfile
+      dockerfile: ./server.prod.dockerfile
     ports:
       - 8000:80
     env_file:
