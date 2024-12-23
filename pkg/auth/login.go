@@ -16,6 +16,7 @@ import (
 type LoginRequest struct {
 	UserName string `json:"user_name" validate:"required"`
 	Password string `json:"password" validate:"required"`
+	Otp      string `json:"otp" validate:"required"`
 }
 
 type LoginResponse struct {
@@ -55,6 +56,22 @@ func (s *AuthService) Login(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, response)
 	}
 
+	// check otp
+	isOtpValid, err := s.Queries.CheckOtp(c.Request().Context(), db.CheckOtpParams{
+		UserID: user.ID,
+		Otp:    req.Otp,
+	})
+	if err != nil {
+		s.Logger.Error().Err(err).Msg("failed to get otp")
+		response := response.ErrResp(fmt.Sprintf("failed to get otp = %s", err.Error()))
+		return c.JSON(http.StatusBadRequest, response)
+	}
+	if !isOtpValid {
+		response := response.ErrResp("wrong Otp")
+		return c.JSON(http.StatusBadRequest, response)
+	}
+
+	// all ok from here
 	old_device_id := user.PrimaryDevice
 	new_device_id, _ := helpers.GetDeviceID(c)
 	isSameDevice := old_device_id == new_device_id

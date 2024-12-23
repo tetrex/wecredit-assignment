@@ -9,7 +9,7 @@ import (
 	"context"
 )
 
-const checkOtp = `-- name: CheckOtp :exec
+const checkOtp = `-- name: CheckOtp :one
 SELECT COUNT(*) > 0 AS is_valid
 FROM mobile_otp
 WHERE user_id = $1
@@ -22,9 +22,11 @@ type CheckOtpParams struct {
 	Otp    string `json:"otp"`
 }
 
-func (q *Queries) CheckOtp(ctx context.Context, arg CheckOtpParams) error {
-	_, err := q.db.Exec(ctx, checkOtp, arg.UserID, arg.Otp)
-	return err
+func (q *Queries) CheckOtp(ctx context.Context, arg CheckOtpParams) (bool, error) {
+	row := q.db.QueryRow(ctx, checkOtp, arg.UserID, arg.Otp)
+	var is_valid bool
+	err := row.Scan(&is_valid)
+	return is_valid, err
 }
 
 const createNewOtp = `-- name: CreateNewOtp :exec

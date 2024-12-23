@@ -243,10 +243,14 @@ const docTemplate = `{
         "auth.LoginRequest": {
             "type": "object",
             "required": [
+                "otp",
                 "password",
                 "user_name"
             ],
             "properties": {
+                "otp": {
+                    "type": "string"
+                },
                 "password": {
                     "type": "string"
                 },

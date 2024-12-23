@@ -2,11 +2,14 @@ basePath: /
 definitions:
   auth.LoginRequest:
     properties:
+      otp:
+        type: string
       password:
         type: string
       user_name:
         type: string
     required:
+    - otp
     - password
     - user_name
     type: object
