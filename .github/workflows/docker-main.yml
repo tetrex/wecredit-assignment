@@ -14,7 +14,7 @@ jobs:
       - name: build and push docker image
         run: |
           docker login --username tetrex --password ${{ secrets.GH_PKGS_TOKEN }} ghcr.io
-          docker build -f ./docker/server/server.main.dockerfile . \
+          docker build -f ./docker/server/server.prod.dockerfile . \
             --tag ghcr.io/tetrex/wecredit-assignment:latest
           docker push ghcr.io/tetrex/wecredit-assignment:latest
 
@@ -26,38 +26,12 @@ jobs:
       - name: make .env.main
         uses: SpicyPizza/create-envfile@v2.0
         with:
-          envkey_MYSQL_CONNECTION_STRING: ${{ secrets.MYSQL_CONNECTION_STRING }}
-          envkey_MONGO_CONNECTION_STRING: ${{ secrets.MONGO_CONNECTION_STRING }}
-          envkey_MONGO_DATABASE_NAME: ${{ secrets.MONGO_DATABASE_NAME }}
-          envkey_JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+          envkey_POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          envkey_POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          envkey_POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          envkey_PG_CONNECTION_STRING: ${{ secrets.PG_CONNECTION_STRING }}
+          envkey_PG_MIGRATION_STRING: ${{ secrets.PG_MIGRATION_STRING }}
           envkey_APP_ENV: ${{ secrets.APP_ENV }}
-          envkey_TURNSTILE_SECRET: ${{ secrets.TURNSTILE_SECRET }}
-          envkey_TURNSTILE_URL: ${{ secrets.TURNSTILE_URL }}
-          envkey_GEOIPUPDATE_ACCOUNT_ID: ${{ secrets.GEOIPUPDATE_ACCOUNT_ID }}
-          envkey_GEOIPUPDATE_LICENSE_KEY: ${{ secrets.GEOIPUPDATE_LICENSE_KEY }}
-          envkey_GEOIPUPDATE_EDITION_IDS: ${{ secrets.GEOIPUPDATE_EDITION_IDS }}
-          envkey_GEOIPUPDATE_FREQUENCY: ${{ secrets.GEOIPUPDATE_FREQUENCY }}
-          envkey_AWS_KEY: ${{ secrets.AWS_KEY }}
-          envkey_AWS_SECRET: ${{ secrets.AWS_SECRET }}
-          envkey_AWS_REGION: ${{ secrets.AWS_REGION }}
-          envkey_CLOUDFRONT_CDN: ${{ secrets.CLOUDFRONT_CDN }}
-          envkey_AWS_BUCKET: ${{ secrets.AWS_BUCKET }}
-          envkey_AWS_KEY_EMAIL: ${{ secrets.AWS_KEY_EMAIL }}
-          envkey_AWS_SECRET_EMAIL: ${{ secrets.AWS_SECRET_EMAIL }}
-          envkey_SMS_GUPSHUP_URL: ${{ secrets.SMS_GUPSHUP_URL }}
-          envkey_SMS_GUPSHUP_USER_ID: ${{ secrets.SMS_GUPSHUP_USER_ID }}
-          envkey_SMS_GUPSHUP_PASSWORD: ${{ secrets.SMS_GUPSHUP_PASSWORD }}
-          envkey_SMS_GUPSHUP_DLT_TEMPLATE_ID: ${{ secrets.SMS_GUPSHUP_DLT_TEMPLATE_ID }}
-          envkey_SMS_GUPSHUP_PRINCIPAL_ENTITY_ID: ${{ secrets.SMS_GUPSHUP_PRINCIPAL_ENTITY_ID }}
-          envkey_SMS_GUPSHUP_SENDER: ${{ secrets.SMS_GUPSHUP_SENDER }}
-          envkey_SMS_TWILIO_ACCOUNT_SID: ${{ secrets.SMS_TWILIO_ACCOUNT_SID }}
-          envkey_SMS_TWILIO_AUTH_TOKEN: ${{ secrets.SMS_TWILIO_AUTH_TOKEN }}
-          envkey_SMS_TWILIO_PHONE_NUMBER: ${{ secrets.SMS_TWILIO_PHONE_NUMBER }}
-          envkey_NEVERBOUNCE_KEY: ${{ secrets.NEVERBOUNCE_KEY }}
-          envkey_REDIS_ADDRESS: ${{ secrets.REDIS_ADDRESS }}
-          envkey_REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
-          envkey_DECRYPT_SECRET_KEY: ${{ secrets.DECRYPT_SECRET_KEY }}
-          envkey_ADS_BASE_URL: ${{ secrets.ADS_BASE_URL }}
           directory: ./
           file_name: .env.main
           fail_on_empty: true
@@ -80,38 +54,12 @@ jobs:
       - name: make .env.main
         uses: SpicyPizza/create-envfile@v2.0
         with:
-          envkey_MYSQL_CONNECTION_STRING: ${{ secrets.MYSQL_CONNECTION_STRING }}
-          envkey_MONGO_CONNECTION_STRING: ${{ secrets.MONGO_CONNECTION_STRING }}
-          envkey_MONGO_DATABASE_NAME: ${{ secrets.MONGO_DATABASE_NAME }}
-          envkey_JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+          envkey_POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          envkey_POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          envkey_POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          envkey_PG_CONNECTION_STRING: ${{ secrets.PG_CONNECTION_STRING }}
+          envkey_PG_MIGRATION_STRING: ${{ secrets.PG_MIGRATION_STRING }}
           envkey_APP_ENV: ${{ secrets.APP_ENV }}
-          envkey_TURNSTILE_SECRET: ${{ secrets.TURNSTILE_SECRET }}
-          envkey_TURNSTILE_URL: ${{ secrets.TURNSTILE_URL }}
-          envkey_GEOIPUPDATE_ACCOUNT_ID: ${{ secrets.GEOIPUPDATE_ACCOUNT_ID }}
-          envkey_GEOIPUPDATE_LICENSE_KEY: ${{ secrets.GEOIPUPDATE_LICENSE_KEY }}
-          envkey_GEOIPUPDATE_EDITION_IDS: ${{ secrets.GEOIPUPDATE_EDITION_IDS }}
-          envkey_GEOIPUPDATE_FREQUENCY: ${{ secrets.GEOIPUPDATE_FREQUENCY }}
-          envkey_AWS_KEY: ${{ secrets.AWS_KEY }}
-          envkey_AWS_SECRET: ${{ secrets.AWS_SECRET }}
-          envkey_AWS_REGION: ${{ secrets.AWS_REGION }}
-          envkey_CLOUDFRONT_CDN: ${{ secrets.CLOUDFRONT_CDN }}
-          envkey_AWS_BUCKET: ${{ secrets.AWS_BUCKET }}
-          envkey_AWS_KEY_EMAIL: ${{ secrets.AWS_KEY_EMAIL }}
-          envkey_AWS_SECRET_EMAIL: ${{ secrets.AWS_SECRET_EMAIL }}
-          envkey_SMS_GUPSHUP_URL: ${{ secrets.SMS_GUPSHUP_URL }}
-          envkey_SMS_GUPSHUP_USER_ID: ${{ secrets.SMS_GUPSHUP_USER_ID }}
-          envkey_SMS_GUPSHUP_PASSWORD: ${{ secrets.SMS_GUPSHUP_PASSWORD }}
-          envkey_SMS_GUPSHUP_DLT_TEMPLATE_ID: ${{ secrets.SMS_GUPSHUP_DLT_TEMPLATE_ID }}
-          envkey_SMS_GUPSHUP_PRINCIPAL_ENTITY_ID: ${{ secrets.SMS_GUPSHUP_PRINCIPAL_ENTITY_ID }}
-          envkey_SMS_GUPSHUP_SENDER: ${{ secrets.SMS_GUPSHUP_SENDER }}
-          envkey_SMS_TWILIO_ACCOUNT_SID: ${{ secrets.SMS_TWILIO_ACCOUNT_SID }}
-          envkey_SMS_TWILIO_AUTH_TOKEN: ${{ secrets.SMS_TWILIO_AUTH_TOKEN }}
-          envkey_SMS_TWILIO_PHONE_NUMBER: ${{ secrets.SMS_TWILIO_PHONE_NUMBER }}
-          envkey_NEVERBOUNCE_KEY: ${{ secrets.NEVERBOUNCE_KEY }}
-          envkey_REDIS_ADDRESS: ${{ secrets.REDIS_ADDRESS }}
-          envkey_REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
-          envkey_DECRYPT_SECRET_KEY: ${{ secrets.DECRYPT_SECRET_KEY }}
-          envkey_ADS_BASE_URL: ${{ secrets.ADS_BASE_URL }}
           directory: ./
           file_name: .env.main
           fail_on_empty: true
@@ -142,8 +90,8 @@ jobs:
             git pull
             git checkout main
             docker login --username tetrex --password ${{ secrets.GH_PKGS_TOKEN }} ghcr.io
-            docker compose -f ./docker/server/docker-compose-main.yml pull main-server
-            docker compose -f ./docker/server/docker-compose-main.yml up -d --remove-orphans
+            docker compose -f ./docker-compose.prod.yml pull main-server
+            docker compose -f ./docker-compose.prod.yml up -d --remove-orphans
             docker image prune -f
 
   deploy-server-2:
@@ -162,6 +110,6 @@ jobs:
             git pull
             git checkout main
             docker login --username tetrex --password ${{ secrets.GH_PKGS_TOKEN }} ghcr.io
-            docker compose -f ./docker/server/docker-compose-main.yml pull main-server
-            docker compose -f ./docker/server/docker-compose-main.yml up -d --remove-orphans
+            docker compose -f ./docker-compose.prod.yml pull main-server
+            docker compose -f ./docker-compose.prod.yml up -d --remove-orphans
             docker image prune -f
