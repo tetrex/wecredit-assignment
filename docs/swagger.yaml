@@ -31,6 +31,13 @@ definitions:
     required:
     - user_name
     type: object
+  auth.ResendOtpRequest:
+    properties:
+      user_name:
+        type: string
+    required:
+    - user_name
+    type: object
   auth.SignUpRequest:
     properties:
       age:
@@ -149,7 +156,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: Sends Otp To User
+      description: Gets Otp To User
       parameters:
       - description: OtpRequest
         in: body
@@ -168,7 +175,7 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.ErrorResponse'
-      summary: Send Otp
+      summary: Get Otp
       tags:
       - Auth
   /v1/login:
@@ -195,6 +202,32 @@ paths:
           schema:
             $ref: '#/definitions/response.ErrorResponse'
       summary: User Login
+      tags:
+      - Auth
+  /v1/resend-otp:
+    post:
+      consumes:
+      - application/json
+      description: Re-Sends Otp To User
+      parameters:
+      - description: ResendOtpRequest
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/auth.ResendOtpRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Re-Send Otp
       tags:
       - Auth
   /v1/signup:

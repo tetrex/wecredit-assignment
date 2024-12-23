@@ -10,8 +10,8 @@ import (
 )
 
 // @tags			Auth
-// @summary			Send Otp
-// @description		Sends Otp To User
+// @summary			Get Otp
+// @description		Gets Otp To User
 // @accept			json
 // @produce			json
 // @param			body body 		OtpRequest true "OtpRequest"

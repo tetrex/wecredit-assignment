@@ -66,6 +66,23 @@ func (q *Queries) GetValidOtpForUserName(ctx context.Context, username string) (
 	return i, err
 }
 
+const isValidOtp = `-- name: IsValidOtp :one
+SELECT COUNT(mo.otp) >0 AS is_valid
+FROM mobile_otp mo
+JOIN users u ON mo.user_id = u.id
+WHERE u.username = $1           
+  AND mo.valid_till > NOW()      
+  AND mo.is_used = FALSE         
+LIMIT 1
+`
+
+func (q *Queries) IsValidOtp(ctx context.Context, username string) (bool, error) {
+	row := q.db.QueryRow(ctx, isValidOtp, username)
+	var is_valid bool
+	err := row.Scan(&is_valid)
+	return is_valid, err
+}
+
 const markOtpUsed = `-- name: MarkOtpUsed :exec
 UPDATE mobile_otp
 SET is_used = TRUE

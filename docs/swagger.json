@@ -85,7 +85,7 @@
         },
         "/v1/get-valid-otp": {
             "post": {
-                "description": "Sends Otp To User",
+                "description": "Gets Otp To User",
                 "consumes": [
                     "application/json"
                 ],
@@ -95,7 +95,7 @@
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Send Otp",
+                "summary": "Get Otp",
                 "parameters": [
                     {
                         "description": "OtpRequest",
@@ -152,6 +152,46 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/auth.LoginResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/resend-otp": {
+            "post": {
+                "description": "Re-Sends Otp To User",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Re-Send Otp",
+                "parameters": [
+                    {
+                        "description": "ResendOtpRequest",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/auth.ResendOtpRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.SuccessResponse"
                         }
                     },
                     "500": {
@@ -271,6 +311,17 @@
             }
         },
         "auth.OtpRequest": {
+            "type": "object",
+            "required": [
+                "user_name"
+            ],
+            "properties": {
+                "user_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "auth.ResendOtpRequest": {
             "type": "object",
             "required": [
                 "user_name"

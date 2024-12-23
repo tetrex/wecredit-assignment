@@ -71,6 +71,16 @@ func (s *AuthService) Login(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, response)
 	}
 
+	err = s.Queries.MarkOtpUsed(c.Request().Context(), db.MarkOtpUsedParams{
+		Otp:      req.Otp,
+		Username: req.UserName,
+	})
+	if err != nil {
+		s.Logger.Error().Err(err).Msg("failed to mark otp used")
+		response := response.ErrResp(fmt.Sprintf("failed to mark otp used = %s", err.Error()))
+		return c.JSON(http.StatusBadRequest, response)
+	}
+
 	// all ok from here
 	old_device_id := user.PrimaryDevice
 	new_device_id, _ := helpers.GetDeviceID(c)

@@ -18,6 +18,15 @@ WHERE u.username = $1
   AND mo.is_used = FALSE         
 LIMIT 1;                        
 
+-- name: IsValidOtp :one
+SELECT COUNT(mo.otp) >0 AS is_valid
+FROM mobile_otp mo
+JOIN users u ON mo.user_id = u.id
+WHERE u.username = $1           
+  AND mo.valid_till > NOW()      
+  AND mo.is_used = FALSE         
+LIMIT 1; 
+
 -- name: MarkOtpUsed :exec
 UPDATE mobile_otp
 SET is_used = TRUE
