@@ -15,6 +15,7 @@ func InitRoutes(router *echo.Echo, services *services.Services, l *zerolog.Logge
 	// auth
 	router.POST("/v1/login", services.Auth.Login)
 	router.POST("/v1/signup", services.Auth.SignUp)
+	router.POST("/v1/generate-otp", services.Auth.GenerateOtp)
 
 	// Protected routes (JWT required)
 	protected := router.Group("/v1", jwt.JWTMiddleware)

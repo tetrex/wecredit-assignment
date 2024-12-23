@@ -41,3 +41,44 @@ func (q *Queries) CreateNewOtp(ctx context.Context, arg CreateNewOtpParams) erro
 	_, err := q.db.Exec(ctx, createNewOtp, arg.UserID, arg.Otp)
 	return err
 }
+
+const getValidOtpForUserName = `-- name: GetValidOtpForUserName :one
+SELECT mo.otp,u.username
+FROM mobile_otp mo
+JOIN users u ON mo.user_id = u.id
+WHERE u.username = $1           
+  AND mo.valid_till > NOW()      
+  AND mo.is_used = FALSE         
+LIMIT 1
+`
+
+type GetValidOtpForUserNameRow struct {
+	Otp      string `json:"otp"`
+	Username string `json:"username"`
+}
+
+func (q *Queries) GetValidOtpForUserName(ctx context.Context, username string) (GetValidOtpForUserNameRow, error) {
+	row := q.db.QueryRow(ctx, getValidOtpForUserName, username)
+	var i GetValidOtpForUserNameRow
+	err := row.Scan(&i.Otp, &i.Username)
+	return i, err
+}
+
+const markOtpUsed = `-- name: MarkOtpUsed :exec
+UPDATE mobile_otp
+SET is_used = TRUE
+WHERE otp = $1                   
+  AND user_id = (
+      SELECT id FROM users WHERE username = $2
+  )
+`
+
+type MarkOtpUsedParams struct {
+	Otp      string `json:"otp"`
+	Username string `json:"username"`
+}
+
+func (q *Queries) MarkOtpUsed(ctx context.Context, arg MarkOtpUsedParams) error {
+	_, err := q.db.Exec(ctx, markOtpUsed, arg.Otp, arg.Username)
+	return err
+}

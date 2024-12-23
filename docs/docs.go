@@ -49,6 +49,46 @@ const docTemplate = `{
                 }
             }
         },
+        "/v1/generate-otp": {
+            "post": {
+                "description": "Sends Otp To User",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Send Otp",
+                "parameters": [
+                    {
+                        "description": "OtpRequest",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/auth.OtpRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.SuccessResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/login": {
             "post": {
                 "description": "Login for User",
@@ -162,6 +202,10 @@ const docTemplate = `{
     "definitions": {
         "auth.LoginRequest": {
             "type": "object",
+            "required": [
+                "password",
+                "user_name"
+            ],
             "properties": {
                 "password": {
                     "type": "string"
@@ -184,6 +228,17 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "old_device_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "auth.OtpRequest": {
+            "type": "object",
+            "required": [
+                "user_name"
+            ],
+            "properties": {
+                "user_name": {
                     "type": "string"
                 }
             }
@@ -234,6 +289,15 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "error": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.SuccessResponse": {
+            "type": "object",
+            "properties": {
+                "data": {},
+                "msg": {
                     "type": "string"
                 }
             }

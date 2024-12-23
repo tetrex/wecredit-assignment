@@ -13,6 +13,7 @@ type MobileOtp struct {
 	UserID    int32            `json:"user_id"`
 	Otp       string           `json:"otp"`
 	ValidTill pgtype.Timestamp `json:"valid_till"`
+	IsUsed    pgtype.Bool      `json:"is_used"`
 	CreatedAt pgtype.Timestamp `json:"created_at"`
 }
 

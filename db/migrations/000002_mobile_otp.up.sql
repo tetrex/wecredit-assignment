@@ -3,5 +3,6 @@ CREATE TABLE mobile_otp (
     user_id INT NOT NULL,             -- Foreign key to reference users table
     otp VARCHAR(10) NOT NULL,         -- OTP code (e.g., 6-digit numeric or alphanumeric)
     valid_till TIMESTAMP NOT NULL,    -- Expiration time of the OTP
+    is_used BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT NOW() -- Time when the OTP was created
 );

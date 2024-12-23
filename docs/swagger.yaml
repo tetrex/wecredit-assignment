@@ -6,6 +6,9 @@ definitions:
         type: string
       user_name:
         type: string
+    required:
+    - password
+    - user_name
     type: object
   auth.LoginResponse:
     properties:
@@ -17,6 +20,13 @@ definitions:
         type: string
       old_device_id:
         type: string
+    type: object
+  auth.OtpRequest:
+    properties:
+      user_name:
+        type: string
+    required:
+    - user_name
     type: object
   auth.SignUpRequest:
     properties:
@@ -49,6 +59,12 @@ definitions:
   response.ErrorResponse:
     properties:
       error:
+        type: string
+    type: object
+  response.SuccessResponse:
+    properties:
+      data: {}
+      msg:
         type: string
     type: object
   user.User:
@@ -100,6 +116,32 @@ paths:
       summary: Get Health check status
       tags:
       - Health
+  /v1/generate-otp:
+    post:
+      consumes:
+      - application/json
+      description: Sends Otp To User
+      parameters:
+      - description: OtpRequest
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/auth.OtpRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Send Otp
+      tags:
+      - Auth
   /v1/login:
     post:
       consumes:

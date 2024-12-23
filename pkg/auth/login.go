@@ -14,8 +14,8 @@ import (
 )
 
 type LoginRequest struct {
-	UserName string `json:"user_name"`
-	Password string `json:"password"`
+	UserName string `json:"user_name" validate:"required"`
+	Password string `json:"password" validate:"required"`
 }
 
 type LoginResponse struct {
@@ -52,7 +52,7 @@ func (s *AuthService) Login(c echo.Context) error {
 	if err != nil {
 		s.Logger.Error().Err(err).Msg("worng username or password")
 		response := response.ErrResp(fmt.Sprintf("worng username or password = %s", err.Error()))
-		return c.JSON(http.StatusInternalServerError, response)
+		return c.JSON(http.StatusBadRequest, response)
 	}
 
 	old_device_id := user.PrimaryDevice
